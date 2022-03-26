@@ -7,12 +7,13 @@ public class Main {
         ArrayList<Student> students = new ArrayList<>();
         ArrayList<Professor> professors = new ArrayList<>();
         TotalEducation education = new TotalEducation();
+        ArrayList<Lesson> lessons = new ArrayList<>();
 
         ///// page1 --> Login or SignUp or Exit
         while (true) {
             char ch = page1();
             switch (ch) {
-                case '1' -> LoginFunction(students , professors , education);
+                case '1' -> LoginFunction(students , professors , education , lessons);
                 case '2' -> SignUpFunction(students, professors, education);
                 case '3' -> {
                     return;
@@ -36,7 +37,7 @@ public class Main {
         System.exit(0);
     }
 
-    static void LoginFunction ( ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education){
+    static void LoginFunction ( ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons){
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.print("\n\n\n\n\n");
@@ -50,21 +51,21 @@ public class Main {
                 case '1' :
                     Student std = Check_LoginTo_Student_Account(students);
                     if ( std != null )  {
-                        LoginStudentAccont a = new LoginStudentAccont();
-                        a.LoginMain(std);
+                        LoginStudentAccount a = new LoginStudentAccount();
+                        a.LoginMain(std , lessons);
                     }
                     break;
                 case '2' :
                     Professor pr = Check_LoginTo_Professor_Account( professors );
                     if ( pr != null ) {
                         LoginProfessorAccount a = new LoginProfessorAccount();
-                        a.LoginMain(pr);
+                        a.LoginMain(pr , lessons);
                     }
                     break;
                 case '3' :
                     if ( Check_LoginTo_TotalEducation_Account( education )) {
                         LoginTotalEducationAccount a = new LoginTotalEducationAccount();
-                        a.LoginMain( education );
+                        a.LoginMain( education , lessons );
                     }
                     break;
                 case '4' :
