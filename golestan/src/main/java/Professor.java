@@ -36,6 +36,4 @@ public class Professor {
     public String getCollegeP() {
         return collegeP;
     }
-
-
 }

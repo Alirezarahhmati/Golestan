@@ -6,6 +6,7 @@ public class Student {
     private String field;
     private String college;
     private String entryYear;
+    private double gradePointAverage;
 
     /// set setter for all value
     public void setUsername(String username) { this.username = username; }

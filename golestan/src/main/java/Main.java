@@ -8,12 +8,13 @@ public class Main {
         ArrayList<Professor> professors = new ArrayList<>();
         TotalEducation education = new TotalEducation();
         ArrayList<Lesson> lessons = new ArrayList<>();
+        ArrayList<Term> terms = new ArrayList<>();
 
         ///// page1 --> Login or SignUp or Exit
         while (true) {
             char ch = page1();
             switch (ch) {
-                case '1' -> LoginFunction(students , professors , education , lessons);
+                case '1' -> LoginFunction(students , professors , education , lessons ,terms);
                 case '2' -> SignUpFunction(students, professors, education);
                 case '3' -> {
                     return;
@@ -37,7 +38,7 @@ public class Main {
         System.exit(0);
     }
 
-    static void LoginFunction ( ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons){
+    static void LoginFunction ( ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms){
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.print("\n\n\n\n\n");
@@ -52,7 +53,7 @@ public class Main {
                     Student std = Check_LoginTo_Student_Account(students);
                     if ( std != null )  {
                         LoginStudentAccount a = new LoginStudentAccount();
-                        a.LoginMain(std , lessons);
+                        a.LoginMain(std , lessons ,terms);
                     }
                     break;
                 case '2' :
@@ -65,7 +66,7 @@ public class Main {
                 case '3' :
                     if ( Check_LoginTo_TotalEducation_Account( education )) {
                         LoginTotalEducationAccount a = new LoginTotalEducationAccount();
-                        a.LoginMain( education , lessons );
+                        a.LoginMain(students , professors , education , lessons , terms);
                     }
                     break;
                 case '4' :
