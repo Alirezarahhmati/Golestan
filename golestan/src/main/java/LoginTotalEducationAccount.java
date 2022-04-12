@@ -1,5 +1,5 @@
+import java.security.spec.EdDSAParameterSpec;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class LoginTotalEducationAccount {
@@ -33,16 +33,14 @@ public class LoginTotalEducationAccount {
         }
     }
 
-
-
-    static void NewFaculty ( TotalEducation education ) {
+    private static void NewFaculty ( TotalEducation education ) {
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.println("Enter the name of new Faculty : ");
             String nameFaculty = input.next();
             boolean checkDuplicate = false;
             for (String s : education.getFaculties()) {
-                if (s == nameFaculty) {
+                if (s.equals(nameFaculty)) {
                     System.err.println("This Faculty its duplicate.");
                     checkDuplicate = true;
                 }
@@ -58,7 +56,7 @@ public class LoginTotalEducationAccount {
         }
     }
 
-    static void EditInfo (TotalEducation education) {
+    private static void EditInfo (TotalEducation education) {
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.print("\n\n\n\n\n" +
@@ -83,34 +81,41 @@ public class LoginTotalEducationAccount {
         }
     }
 
-    static void semester ( ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms) {
+    private static void semester ( ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms) {
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.print("\n\n\n\n\n" +
-                    "\t1_ New Semester" +
-                    "\t2_ Close Semester" +
-                    "\t3_ Exit"            );
+                    "\t1_ New Semester\n" +
+                    "\t2_ Close Semester\n" +
+                    "\t3_ Close Term\n" +
+                    "\t4_ Exit\n"            );
             String ch = input.next();
             switch (ch.charAt(0)) {
                 case '1' :
-                    NewSemester(lessons);
+                    NewSemester(lessons ,education);
                     break;
                 case '2' :
-                    closeSemester(students , professors , education , lessons , terms);
+                    closeSemester(education , students , lessons);
                     break;
                 case '3' :
+                    closeTerm(students , professors , education , lessons , terms);
+                    break;
+                case '4' :
                     return;
             }
         }
     }
 
-    static void NewSemester ( ArrayList<Lesson> lessons ) {
+    private static void NewSemester ( ArrayList<Lesson> lessons , TotalEducation education ) {
         Scanner input = new Scanner(System.in);
-        if (lessons != null) {
+        if (education.isNewTerm()) {
             System.err.println("First you must close progress term.");
             System.out.println("Press any key to exit.");
             input.next();
         }
+
+        education.setTermInProgress(true);
+        education.setNewTerm(true);
 
         while (true) {
             Lesson lesson = new Lesson();
@@ -118,7 +123,7 @@ public class LoginTotalEducationAccount {
             String n = input.next();
             lesson.setLessonName(n);
 
-            System.out.println("Enter a professor for new lesson : ");
+            System.out.println("Enter user name of a professor account for new lesson : ");
             n = input.next();
             lesson.setProfessor(n);
 
@@ -130,8 +135,18 @@ public class LoginTotalEducationAccount {
             n = input.next();
             lesson.setLessonCode(n);
 
-            System.out.println("Enter the unit of this lesson : ");
-            int a = input.nextInt();
+
+            int a;
+            while (true) {
+                System.out.println("Enter the unit of this lesson : ");
+                try {
+                    a = input.nextInt();
+                    break;
+                } catch (Exception e) {
+                    System.err.println("Invalid input!");
+                    input.next();
+                }
+            }
             lesson.setUnit(a);
 
             System.out.println("\n\n\n\n\n" +
@@ -155,8 +170,9 @@ public class LoginTotalEducationAccount {
         }
     }
 
-    static void closeSemester (ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms) {
+    private static void closeTerm (ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms) {
         Scanner input = new Scanner(System.in);
+        // check if there is no term in progress
         if (!education.isNewTerm()) {
             System.out.println("There is not a term in progress.");
             System.out.println("Press any key to continue.");
@@ -164,11 +180,50 @@ public class LoginTotalEducationAccount {
             return;
         }
 
+        // calculate grade point average of all student before close term
+        for (Student std : students) {
+            double sumGrade = 0;
+            int counter = 0;
+            for (Lesson l : std.getLessons()) {
+                sumGrade += l.getStudent_score();
+                counter++;
+            }
+            std.setGradePointAverage( sumGrade / counter);
+        }
+
+        // saving information of this term
         Term term = new Term();
         term.setStudents(students);
         term.setProfessors(professors);
         term.setLessons(lessons);
 
         terms.add(term);
+        education.setTermInProgress(false);
+    }
+
+    private static void closeSemester (TotalEducation education , ArrayList<Student> students , ArrayList<Lesson> lessons) {
+
+        for (Student std :  students) {
+            int sumUnit = 0;
+            for (Lesson l : std.getLessons()) {
+                sumUnit += l.getUnit();
+            }
+
+            if (sumUnit < 12) {
+                for (Lesson stdL : std.getLessons()) {
+                    for (Lesson l : lessons) {
+                        Lesson lesson = null;
+                        if (l == stdL) {
+                            lesson = l;
+                        }
+                        try {
+                            assert lesson != null;
+                            lesson.deleteParticiple(std.getStudentNumber());
+                        } catch (Exception ignored) {}
+                    }
+                }
+            }
+        }
+        education.setNewTerm(false);
     }
 }

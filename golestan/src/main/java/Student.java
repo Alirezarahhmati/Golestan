@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Student {
     private String username;
     private String password;
@@ -7,6 +9,17 @@ public class Student {
     private String college;
     private String entryYear;
     private double gradePointAverage;
+    private ArrayList<Lesson> lessons = new ArrayList<>();
+
+//    public Student(String username, String password, String totalName, String studentNumber, String field, String college, String entryYear) {
+//        this.username = username;
+//        this.password = password;
+//        this.totalName = totalName;
+//        this.studentNumber = studentNumber;
+//        this.field = field;
+//        this.college = college;
+//        this.entryYear = entryYear;
+//    }
 
     /// set setter for all value
     public void setUsername(String username) { this.username = username; }
@@ -29,6 +42,18 @@ public class Student {
 
     public void setEntryYear(String entryYear) {
         this.entryYear = entryYear;
+    }
+
+    public void setGradePointAverage(double gradePointAverage) {
+        this.gradePointAverage = gradePointAverage;
+    }
+
+    public void addLessons (Lesson lesson) {
+        lessons.add(lesson);
+    }
+
+    public void setLessons(ArrayList<Lesson> lessons) {
+        this.lessons = lessons;
     }
 
     //// set getter for all value
@@ -55,5 +80,22 @@ public class Student {
     public String getEntryYear() {
         return entryYear;
     }
+
+    public double getGradePointAverage() {
+        return gradePointAverage;
+    }
+
+    public ArrayList<Lesson> getLessons() {
+        return lessons;
+    }
+
+
+
+    /// remove
+    public void deleteLesson (Lesson lesson) {
+        lessons.remove(lesson);
+    }
+
+
 
 }

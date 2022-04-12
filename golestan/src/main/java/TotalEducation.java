@@ -4,7 +4,8 @@ public class TotalEducation {
     private String username;
     private String password;
     private boolean newTerm = false;
-    private ArrayList<String> Faculties;
+    private boolean termInProgress = false;
+    private ArrayList<String> Faculties = new ArrayList<>();
 
     // setter
     public void setUsername(String username) { this.username = username; }
@@ -13,8 +14,12 @@ public class TotalEducation {
 
     public void setNewTerm(boolean newTerm) { this.newTerm = newTerm; }
 
-    public void addFaculties(String newfaculty) {
-        Faculties.add(newfaculty);
+    public void addFaculties(String newFaculty) {
+        Faculties.add(newFaculty);
+    }
+
+    public void setTermInProgress(boolean termInProgress) {
+        this.termInProgress = termInProgress;
     }
 
     // getter
@@ -26,5 +31,9 @@ public class TotalEducation {
 
     public ArrayList<String> getFaculties() {
         return Faculties;
+    }
+
+    public boolean isTermInProgress() {
+        return termInProgress;
     }
 }

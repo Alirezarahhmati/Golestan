@@ -7,8 +7,8 @@ public class Lesson {
     private String lessonCode;
     private String time;
     private int unit;
-    private int student_score;
-    ArrayList<String> participle;
+    private double student_score = -1;
+    ArrayList<String> participle = new ArrayList<>();
 
 
     // setter
@@ -73,7 +73,12 @@ public class Lesson {
         return participle;
     }
 
-    public int getStudent_score() {
+    public double getStudent_score() {
         return student_score;
+    }
+
+    ///// remove
+    public void deleteParticiple (String studentNumber) {
+        participle.remove(studentNumber);
     }
 }

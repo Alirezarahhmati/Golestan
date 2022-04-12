@@ -1,8 +1,8 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
+import java.util.Scanner;
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
 
         ArrayList<Student> students = new ArrayList<>();
         ArrayList<Professor> professors = new ArrayList<>();
@@ -53,14 +53,14 @@ public class Main {
                     Student std = Check_LoginTo_Student_Account(students);
                     if ( std != null )  {
                         LoginStudentAccount a = new LoginStudentAccount();
-                        a.LoginMain(std , lessons ,terms);
+                        a.LoginMain(std , lessons ,terms , education , professors);
                     }
                     break;
                 case '2' :
                     Professor pr = Check_LoginTo_Professor_Account( professors );
                     if ( pr != null ) {
                         LoginProfessorAccount a = new LoginProfessorAccount();
-                        a.LoginMain(pr , lessons);
+                        a.LoginMain(pr , lessons , students);
                     }
                     break;
                 case '3' :
@@ -121,7 +121,7 @@ public class Main {
         while ( !check ) {
             System.out.print("\n");
             System.out.println("Enter your Student number : ");
-            String stdNumber = input.nextLine();
+            String stdNumber = input.next();
             boolean checkRepeat = false;
             for (Student s : students) {
                 if (s.getStudentNumber().equals(stdNumber)) {
@@ -149,10 +149,10 @@ public class Main {
         while ( !check ) {
             System.out.print("\n");
             System.out.println("Enter your User name : ");
-            String stdUserName = input.nextLine();
+            String stdUserName = input.next();
             boolean checkRepeat = false;
             for (Student s : students) {
-                if (std.getUsername().equals(stdUserName)) {
+                if (s.getUsername().equals(stdUserName)) {
                     System.err.println("This User name is duplicate.");
                     System.out.println("Press any key to continue.");
                     input.next();
@@ -210,10 +210,10 @@ public class Main {
         while ( !check ) {
             System.out.print("\n\n\n\n\n");
             System.out.println("Enter your User name : ");
-            String prUserName = input.nextLine();
+            String prUserName = input.next();
             boolean checkRepeat = false;
             for (Professor p : professors) {
-                if (pr.getUsername().equals(prUserName)) {
+                if (p.getUsername().equals(prUserName)) {
                     System.err.println("This User name is duplicate.");
                     System.out.println("Press any key to continue.");
                     input.next();
@@ -318,10 +318,12 @@ public class Main {
         String userName = input.next();
         System.out.print("Enter your Password : ");
         String password = input.next();
+        try {
+            if (education.getUsername().equals(userName) && education.getPassword().equals(password)) {
+                return true;
+            }
+        }catch (Exception ignored) {}
 
-        if ( education.getUsername().equals(userName) && education.getPassword().equals(password) ) {
-            return true;
-        }
         System.err.println("\nYour input user name or password is not correct!");
         System.out.println("press any key to continue");
         input.next();
