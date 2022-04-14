@@ -1,4 +1,3 @@
-import java.security.spec.EdDSAParameterSpec;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -112,6 +111,7 @@ public class LoginTotalEducationAccount {
             System.err.println("First you must close progress term.");
             System.out.println("Press any key to exit.");
             input.next();
+            return;
         }
 
         education.setTermInProgress(true);
@@ -131,10 +131,21 @@ public class LoginTotalEducationAccount {
             n = input.next();
             lesson.setCollegeL(n);
 
-            System.out.println("Enter lesson's code : ");
-            n = input.next();
-            lesson.setLessonCode(n);
-
+            boolean checkDuplicate = true;
+            while (checkDuplicate) {
+                System.out.println("Enter lesson's code : ");
+                n = input.next();
+                /// check for duplicate input
+                for (Lesson l : lessons) {
+                    if (l.getLessonCode().equals(n)) {
+                        System.err.println("Duplicate lesson's code!");
+                    } else {
+                        lesson.setLessonCode(n);
+                        checkDuplicate = false;
+                        break;
+                    }
+                }
+            }
 
             int a;
             while (true) {
@@ -210,16 +221,28 @@ public class LoginTotalEducationAccount {
             }
 
             if (sumUnit < 12) {
-                for (Lesson stdL : std.getLessons()) {
-                    for (Lesson l : lessons) {
-                        Lesson lesson = null;
-                        if (l == stdL) {
-                            lesson = l;
+//                ArrayList<Integer> indexOfDelete = new ArrayList<>();
+//                for (Lesson stdL : std.getLessons()) {
+//                    for (Lesson l : lessons) {
+////                        Lesson lesson = null;
+//                        if (l == stdL) {
+////                            lesson = l;
+//                            indexOfDelete.add(lessons.indexOf(l));
+//                        }
+////                        try {
+////                            assert lesson != null;
+////                            lesson.deleteParticiple(std.getStudentNumber());
+////                        } catch (Exception ignored) {}
+//                    }
+//                }
+//                for ( int i = 0 ; i < indexOfDelete.size(); i++) {
+//                    lessons.get(indexOfDelete.get(i)).deleteParticiple(std.getStudentNumber());
+//                }
+                for (int i = 0; i < std.getLessons().size(); i++) {
+                    for (int j = 0; j < lessons.size(); j++) {
+                        if (std.getLessons().get(i) == lessons.get(j)) {
+                            lessons.get(i).deleteParticiple(std.getStudentNumber());
                         }
-                        try {
-                            assert lesson != null;
-                            lesson.deleteParticiple(std.getStudentNumber());
-                        } catch (Exception ignored) {}
                     }
                 }
             }

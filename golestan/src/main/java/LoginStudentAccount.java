@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class LoginStudentAccount {
@@ -31,12 +30,12 @@ public class LoginStudentAccount {
                     break;
                 case '2':
                     if (education.isTermInProgress()) {
-                        Schedule(std.getLessons() , professors , std);
+                        Schedule(professors , std);
                     }
                     break;
                 case '3':
                     if (education.isTermInProgress() && education.isNewTerm()) {
-                        Register(education, lessons, terms, std);
+                        Register(lessons, terms, std);
                     }
                     break;
                 case '4':
@@ -65,7 +64,7 @@ public class LoginStudentAccount {
         input.next();
     }
 
-    private static void Schedule (ArrayList<Lesson> lessons , ArrayList<Professor> professors , Student std) {
+    private static void Schedule (ArrayList<Professor> professors , Student std) {
         Scanner input = new Scanner(System.in);
 //        String professor = "";
 //        for (Lesson l : lessons) {
@@ -93,7 +92,7 @@ public class LoginStudentAccount {
     }
 
     /////////////////////////////// Registering
-    private static void Register (TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms , Student std ) {
+    private static void Register (ArrayList<Lesson> lessons , ArrayList<Term> terms , Student std ) {
         Scanner input = new Scanner(System.in);
 
         while (true) {
@@ -179,7 +178,9 @@ public class LoginStudentAccount {
                         if (l.getLessonCode().equals(code)) {
                             if ((sumUnit + l.getUnit()) <= maxUnit) {
                                 l.addParticiple(std.getStudentNumber());
-                                std.addLessons(l);
+//                                Lesson lesson = l;
+//                                std.addLessons(lesson);
+                                std.addLessons(copyLesson(l));
                             }
                             break;
                         }
@@ -199,7 +200,6 @@ public class LoginStudentAccount {
                     lesson.deleteParticiple(std.getStudentNumber());
                     std.deleteLesson(lesson);
                 } catch (Exception ignored) {}
-
             }
             //////////// exit
             else if (ch.charAt(0) == '3') {
@@ -262,5 +262,17 @@ public class LoginStudentAccount {
                     return;
             }
         }
+    }
+
+    static Lesson copyLesson (Lesson lesson) {
+        Lesson newsLesson = new Lesson();
+        newsLesson.setLessonName(lesson.getLessonName());
+        newsLesson.setProfessor(lesson.getProfessor());
+        newsLesson.setCollegeL(lesson.getCollegeL());
+        newsLesson.setLessonCode(lesson.getLessonCode());
+        newsLesson.setTime(lesson.getTime());
+        newsLesson.setUnit(lesson.getUnit());
+        newsLesson.setParticiple(lesson.getParticiple());
+        return newsLesson;
     }
 }

@@ -52,9 +52,6 @@ public class Student {
         lessons.add(lesson);
     }
 
-    public void setLessons(ArrayList<Lesson> lessons) {
-        this.lessons = lessons;
-    }
 
     //// set getter for all value
     public String getUsername() { return username; }

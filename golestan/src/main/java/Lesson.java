@@ -44,6 +44,10 @@ public class Lesson {
         this.student_score = student_score;
     }
 
+    public void setParticiple (ArrayList<String> participle) {
+        this.participle = participle;
+    }
+
     // getter
     public String getLessonName() {
         return lessonName;
