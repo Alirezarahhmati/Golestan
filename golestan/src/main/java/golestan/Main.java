@@ -1,7 +1,14 @@
-import java.util.ArrayList;
+package golestan;
 
+import golestan.information.*;
+import golestan.login.LoginProfessorAccount;
+import golestan.login.LoginStudentAccount;
+import golestan.login.LoginTotalEducationAccount;
+
+import java.util.ArrayList;
 import java.util.Scanner;
-public class Main {
+
+public class Main extends NeedFunctions {
     public static void main(String[] args)  {
 
         ArrayList<Student> students = new ArrayList<>();
@@ -38,7 +45,7 @@ public class Main {
         System.exit(0);
     }
 
-    static void LoginFunction ( ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms){
+    static void LoginFunction(ArrayList<Student> students, ArrayList<Professor> professors, TotalEducation education, ArrayList<Lesson> lessons, ArrayList<Term> terms){
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.print("\n\n\n\n\n");
@@ -53,14 +60,14 @@ public class Main {
                     Student std = Check_LoginTo_Student_Account(students);
                     if ( std != null )  {
                         LoginStudentAccount a = new LoginStudentAccount();
-                        a.LoginMain(std , lessons ,terms , education , professors);
+                        a.LoginMain(std , students , lessons ,terms , education , professors);
                     }
                     break;
                 case '2' :
                     Professor pr = Check_LoginTo_Professor_Account( professors );
                     if ( pr != null ) {
                         LoginProfessorAccount a = new LoginProfessorAccount();
-                        a.LoginMain(pr , lessons , students);
+                        a.LoginMain(pr , professors , lessons , students , education);
                     }
                     break;
                 case '3' :
@@ -88,10 +95,10 @@ public class Main {
             String ch = input.next();
             switch (ch.charAt(0)) {
                 case '1':
-                    Student_SignUp(students);
+                    Student_SignUp(students , education);
                     break;
                 case '2':
-                    Professor_SignUp(professors);
+                    Professor_SignUp(professors , education);
                     break;
                 case '3':
                     TotalEducation_SignUp(education);
@@ -104,7 +111,7 @@ public class Main {
         }
     }
 
-    static void Student_SignUp (ArrayList<Student> students)
+    static void Student_SignUp (ArrayList<Student> students , TotalEducation education)
      {
         Scanner input = new Scanner(System.in);
         Student std = new Student();
@@ -120,11 +127,11 @@ public class Main {
         boolean check = false;
         while ( !check ) {
             System.out.print("\n");
-            System.out.println("Enter your Student number : ");
+            System.out.println("Enter your Student ID : ");
             String stdNumber = input.next();
             boolean checkRepeat = false;
             for (Student s : students) {
-                if (s.getStudentNumber().equals(stdNumber)) {
+                if (s.getStudentID().equals(stdNumber)) {
                     System.err.println("This Student Number is not correct.");
                     System.out.println("Press any key to continue.");
                     input.next();
@@ -132,36 +139,45 @@ public class Main {
                 }
             }
             if ( !checkRepeat ) {
-                std.setStudentNumber(stdNumber);
+                std.setStudentID(stdNumber);
                 check = true;
             }
         }
 
-        System.out.print("\n");
-        System.out.println("Enter your college name : ");
-        std.setCollege(input.next());
 
-        System.out.print("\n");
-        System.out.println("Enter your Entry year : ");
-        std.setEntryYear(input.next());
+        while ( true ) {
+            System.out.print("\n");
+            System.out.println("Enter your college name : ");
+            String faculty = input.next();
+            // check if there is a college with input name
+            condition c = isContain(education.getFaculties() , faculty);
+            if ( c == condition.TRUE) {
+                std.setCollege(faculty);
+                break;
+            } else if ( c == condition.EXIT ) {
+                return;
+            }
+        }
 
-        check = false;
-        while ( !check ) {
+        while (true) {
+            System.out.print("\n");
+            System.out.println("Enter your Entry year : ");
+            // check for Wrong input (int & between 1338 and 1400)
+            int entryYear = isInputInt();
+            if (entryYear != 0) {
+                if ( std.setEntryYear(entryYear) ) {
+                    break;
+                }
+            }
+        }
+
+        while ( true ) {
             System.out.print("\n");
             System.out.println("Enter your User name : ");
             String stdUserName = input.next();
-            boolean checkRepeat = false;
-            for (Student s : students) {
-                if (s.getUsername().equals(stdUserName)) {
-                    System.err.println("This User name is duplicate.");
-                    System.out.println("Press any key to continue.");
-                    input.next();
-                    checkRepeat = true;
-                }
-            }
-            if ( !checkRepeat ) {
+            if (isDuplicateStudentID(students, stdUserName)) {
                 std.setUsername(stdUserName);
-                check = true;
+                break;
             }
         }
 
@@ -175,7 +191,7 @@ public class Main {
          // show input information to confirm it or delete it
          System.out.print(  "Your input information is : \n" +
                             "\tName and last name : " + std.getTotalName() + "\n" +
-                            "\tStudent number : " + std.getStudentNumber() + "\n" +
+                            "\tStudent number : " + std.getStudentID() + "\n" +
                             "\tField : " + std.getField() + "\n" +
                             "\tCollege : " + std.getCollege() + "\n" +
                             "\tEntry year : " + std.getEntryYear() + "\n" +
@@ -189,40 +205,42 @@ public class Main {
          }
     }
 
-    static void Professor_SignUp (ArrayList<Professor> professors)
+    static void Professor_SignUp (ArrayList<Professor> professors , TotalEducation education)
     {
         Professor pr = new Professor();
         Scanner input = new Scanner(System.in);
 
-        System.out.print("\n\n\n\n\n");
-        System.out.println("Enter your college : ");
-        pr.setCollegeP(input.next());
+        while (true) {
+            System.out.print("\n\n\n\n\n");
+            System.out.println("Enter your college : ");
+            String faculty = input.next();
+            // check if there is college with input name
+            condition cnd = isContain(education.getFaculties() , faculty);
+            if ( cnd == condition.TRUE) {
+                pr.setCollegeP(faculty);
+                break;
+            } else if ( cnd == condition.EXIT ) {
+                return;
+            }
+        }
 
         System.out.print("\n\n\n\n\n");
         System.out.println("Enter your total name : ");
         pr.setTotalName(input.next());
 
         System.out.print("\n\n\n\n\n");
-        System.out.println("Enter your gorup : ");
+        System.out.println("Enter your group : ");
         pr.setGroup(input.next());
 
-        boolean check = false;
-        while ( !check ) {
+        while ( true ) {
             System.out.print("\n\n\n\n\n");
             System.out.println("Enter your User name : ");
             String prUserName = input.next();
-            boolean checkRepeat = false;
-            for (Professor p : professors) {
-                if (p.getUsername().equals(prUserName)) {
-                    System.err.println("This User name is duplicate.");
-                    System.out.println("Press any key to continue.");
-                    input.next();
-                    checkRepeat = true;
-                }
-            }
-            if ( !checkRepeat ) {
+            if ( !isDuplicateProfessorUser(professors , prUserName) ) {
                 pr.setUsername(prUserName);
-                check = true;
+                break;
+            } else {
+                System.err.println("Wrong input!");
             }
         }
 

@@ -1,3 +1,5 @@
+package golestan.information;
+
 public class Professor {
     private String username;
     private String password;

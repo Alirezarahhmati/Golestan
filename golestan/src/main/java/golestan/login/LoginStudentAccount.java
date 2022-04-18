@@ -1,8 +1,12 @@
+package golestan.login;
+
+import golestan.*;
+import golestan.information.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class LoginStudentAccount {
-    public void LoginMain (Student std , ArrayList<Lesson> lessons , ArrayList<Term> terms , TotalEducation education , ArrayList<Professor> professors) {
+public class LoginStudentAccount extends  NeedFunctions {
+    public void LoginMain(Student std, ArrayList<Student> students, ArrayList<Lesson> lessons, ArrayList<Term> terms, TotalEducation education, ArrayList<Professor> professors) {
         Scanner input = new Scanner(System.in);
         System.out.println("         " + std.getTotalName() + "\n");
 
@@ -39,7 +43,7 @@ public class LoginStudentAccount {
                     }
                     break;
                 case '4':
-                    EditInfo(std);
+                    EditInfo(students , education , std);
                     break;
                 case '5':
                     return;
@@ -66,18 +70,6 @@ public class LoginStudentAccount {
 
     private static void Schedule (ArrayList<Professor> professors , Student std) {
         Scanner input = new Scanner(System.in);
-//        String professor = "";
-//        for (Lesson l : lessons) {
-//            for (Professor pr : professors) {
-//                if (l.getProfessor().equals(pr.getUsername())) {
-//                    professor = pr.getTotalName();
-//                }
-//            }
-//            System.out.println("\n\n");
-//            System.out.println("_ " + l.getLessonName() + "          Professor : " + professor);
-//        }
-//        System.out.println("\n\n\n          Press any key to exit.");
-//        input.next();
 
         for (Lesson l : std.getLessons()) {
             for (Professor pr : professors ) {
@@ -91,7 +83,7 @@ public class LoginStudentAccount {
         input.next();
     }
 
-    /////////////////////////////// Registering
+    ////////////// Registering
     private static void Register (ArrayList<Lesson> lessons , ArrayList<Term> terms , Student std ) {
         Scanner input = new Scanner(System.in);
 
@@ -141,7 +133,7 @@ public class LoginStudentAccount {
          int len = terms.size();
          try {
              for (Student s : terms.get(len - 1).getStudents()) {
-                 if (s.getUsername().equals(std.getStudentNumber())) {
+                 if (s.getUsername().equals(std.getStudentID())) {
                      if (s.getGradePointAverage() >= 18) {
                          maxUnit = 24;
                      }
@@ -177,10 +169,19 @@ public class LoginStudentAccount {
                     for (Lesson l : lessons) {
                         if (l.getLessonCode().equals(code)) {
                             if ((sumUnit + l.getUnit()) <= maxUnit) {
-                                l.addParticiple(std.getStudentNumber());
-//                                Lesson lesson = l;
-//                                std.addLessons(lesson);
-                                std.addLessons(copyLesson(l));
+                                /// check for duplicate select
+                                boolean checkDuplicate = false;
+                                for (Lesson stdL : std.getLessons()) {
+                                    if (stdL.getLessonCode().equals(code)) {
+                                        checkDuplicate = true;
+                                        break;
+                                    }
+                                }
+                                if ( !checkDuplicate ) {
+                                    l.addParticipant(std.getStudentID());
+                                    System.out.println(l.getParticipant());
+                                    std.addLessons(copyLesson(l));
+                                }
                             }
                             break;
                         }
@@ -197,7 +198,7 @@ public class LoginStudentAccount {
                 }
                 try {
                     assert lesson != null;
-                    lesson.deleteParticiple(std.getStudentNumber());
+                    lesson.deleteParticiple(std.getStudentID());
                     std.deleteLesson(lesson);
                 } catch (Exception ignored) {}
             }
@@ -207,9 +208,9 @@ public class LoginStudentAccount {
             }
         }
     }
-    ///////////////////////////////////////////////////////////
+    //////////////////////////
 
-    private static void EditInfo (Student std) {
+    private static void EditInfo(ArrayList<Student> students, TotalEducation education, Student std) {
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.print("\n\n\n\n\n" +
@@ -219,14 +220,19 @@ public class LoginStudentAccount {
                     "\t4_ Edit Field" +
                     "\t5_ Edit College" +
                     "\t6_ Edit Entry year" +
-                    "\t7_ Edit Student Number" +
-                    "\t8_ Back\n"             );
+                    "\t7_ Back\n"             );
             String ch = input.next();
             switch (ch.charAt(0)) {
                 case '1' :
-                    System.out.print("\n\n\n\n\n" +
-                            "\tEnter your new User name : "   );
-                    std.setUsername(input.next());
+                    while ( true ) {
+                        System.out.println("\n\n\n\n");
+                        System.out.println("Enter your User name : ");
+                        String stdUserName = input.next();
+                        if (isDuplicateStudentID(students, stdUserName)) {
+                            std.setUsername(stdUserName);
+                            break;
+                        }
+                    }
                     break;
                 case '2' :
                     System.out.print("\n\n\n\n\n" +
@@ -244,21 +250,34 @@ public class LoginStudentAccount {
                     std.setField(input.next());
                     break;
                 case '5' :
-                    System.out.print("\n\n\n\n\n" +
-                            "\tEnter your new College : "   );
-                    std.setCollege(input.next());
+                    while ( true ) {
+                        System.out.println("\n\n\n\n");
+                        System.out.println("Enter your college name : ");
+                        String faculty = input.next();
+                        // check if there is a college with input name
+                        condition cnd = isContain(education.getFaculties() , faculty);
+                        if (cnd == condition.TRUE) {
+                            std.setCollege(faculty);
+                            break;
+                        } else if (cnd == condition.EXIT){
+                            return;
+                        }
+                    }
                     break;
                 case '6' :
-                    System.out.print("\n\n\n\n\n" +
-                            "\tEnter your new Entry Year : "   );
-                    std.setEntryYear(input.next());
+                    while (true) {
+                        System.out.println("\n\n\n\n\n");
+                        System.out.println("Enter your Entry year : ");
+                        // check for Wrong input (int & between 1338 and 1400)
+                        int entryYear = isInputInt();
+                        if (entryYear != 0) {              // if input is wrong the return of isInputInt() function is zero
+                            if (std.setEntryYear(entryYear)) {
+                                break;
+                            }
+                        }
+                    }
                     break;
                 case '7' :
-                    System.out.print("\n\n\n\n\n" +
-                            "\tEnter your new Student Number : "   );
-                    std.setStudentNumber(input.next());
-                    break;
-                case '8' :
                     return;
             }
         }
@@ -272,7 +291,7 @@ public class LoginStudentAccount {
         newsLesson.setLessonCode(lesson.getLessonCode());
         newsLesson.setTime(lesson.getTime());
         newsLesson.setUnit(lesson.getUnit());
-        newsLesson.setParticiple(lesson.getParticiple());
+        newsLesson.setParticipant(lesson.getParticipant());
         return newsLesson;
     }
 }

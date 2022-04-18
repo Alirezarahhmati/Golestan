@@ -1,5 +1,6 @@
-import java.util.ArrayList;
+package golestan.information;
 
+import java.util.ArrayList;
 public class Lesson {
     private String lessonName;
     private String professor;
@@ -8,7 +9,7 @@ public class Lesson {
     private String time;
     private int unit;
     private double student_score = -1;
-    ArrayList<String> participle = new ArrayList<>();
+    ArrayList<String> participant = new ArrayList<>();
 
 
     // setter
@@ -36,16 +37,16 @@ public class Lesson {
         this.time = time;
     }
 
-    public void addParticiple(String studentNumber) {
-        participle.add(studentNumber);
+    public void addParticipant(String studentNumber) {
+        participant.add(studentNumber);
     }
 
     public void setStudent_score(int student_score) {
         this.student_score = student_score;
     }
 
-    public void setParticiple (ArrayList<String> participle) {
-        this.participle = participle;
+    public void setParticipant(ArrayList<String> participant) {
+        this.participant = participant;
     }
 
     // getter
@@ -73,8 +74,8 @@ public class Lesson {
         return time;
     }
 
-    public ArrayList<String> getParticiple() {
-        return participle;
+    public ArrayList<String> getParticipant() {
+        return participant;
     }
 
     public double getStudent_score() {
@@ -83,6 +84,6 @@ public class Lesson {
 
     ///// remove
     public void deleteParticiple (String studentNumber) {
-        participle.remove(studentNumber);
+        participant.remove(studentNumber);
     }
 }

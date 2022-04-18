@@ -1,3 +1,5 @@
+package golestan.information;
+
 import java.util.ArrayList;
 
 public class Term {

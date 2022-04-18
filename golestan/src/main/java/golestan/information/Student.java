@@ -1,21 +1,23 @@
+package golestan.information;
+
 import java.util.ArrayList;
 
 public class Student {
     private String username;
     private String password;
     private String totalName;
-    private String studentNumber;
+    private String studentID;
     private String field;
     private String college;
-    private String entryYear;
+    private int entryYear;
     private double gradePointAverage;
     private ArrayList<Lesson> lessons = new ArrayList<>();
 
-//    public Student(String username, String password, String totalName, String studentNumber, String field, String college, String entryYear) {
+//    public Student(String username, String password, String totalName, String studentID, String field, String college, String entryYear) {
 //        this.username = username;
 //        this.password = password;
 //        this.totalName = totalName;
-//        this.studentNumber = studentNumber;
+//        this.studentID = studentID;
 //        this.field = field;
 //        this.college = college;
 //        this.entryYear = entryYear;
@@ -34,14 +36,20 @@ public class Student {
         this.field = field;
     }
 
-    public void setStudentNumber(String studentNumber) { this.studentNumber = studentNumber; }
+    public void setStudentID(String studentID) { this.studentID = studentID; }
 
     public void setCollege(String college) {
         this.college = college;
     }
 
-    public void setEntryYear(String entryYear) {
-        this.entryYear = entryYear;
+    public boolean setEntryYear(int entryYear) {
+        if (entryYear >= 1338 && entryYear <= 1400) {
+            this.entryYear = entryYear;
+            return true;
+        } else {
+            System.err.println("Wrong input!");
+            return false;
+        }
     }
 
     public void setGradePointAverage(double gradePointAverage) {
@@ -62,8 +70,8 @@ public class Student {
         return totalName;
     }
 
-    public String getStudentNumber() {
-        return studentNumber;
+    public String getStudentID() {
+        return studentID;
     }
 
     public String getField() {
@@ -74,7 +82,7 @@ public class Student {
         return college;
     }
 
-    public String getEntryYear() {
+    public int getEntryYear() {
         return entryYear;
     }
 
@@ -87,12 +95,17 @@ public class Student {
     }
 
 
-
     /// remove
     public void deleteLesson (Lesson lesson) {
-        lessons.remove(lesson);
+        int index = -1;
+        int len = this.lessons.size();
+        for (int i = 0; i < len ; i++) {
+            if (this.lessons.get(i).getLessonCode().equals(lesson.getLessonCode())) {
+                index = i;
+            }
+        }
+        if (index != -1) {
+            this.lessons.remove(index);
+        }
     }
-
-
-
 }

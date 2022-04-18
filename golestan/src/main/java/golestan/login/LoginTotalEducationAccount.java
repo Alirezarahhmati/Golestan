@@ -1,7 +1,11 @@
+package golestan.login;
+
+import golestan.*;
+import golestan.information.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class LoginTotalEducationAccount {
+public class LoginTotalEducationAccount extends NeedFunctions {
     public void LoginMain (ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms) {
         Scanner input = new Scanner(System.in);
 
@@ -32,7 +36,7 @@ public class LoginTotalEducationAccount {
         }
     }
 
-    private static void NewFaculty ( TotalEducation education ) {
+    private static void NewFaculty(TotalEducation education) {
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.println("Enter the name of new Faculty : ");
@@ -80,6 +84,7 @@ public class LoginTotalEducationAccount {
         }
     }
 
+    ///// semester
     private static void semester ( ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms) {
         Scanner input = new Scanner(System.in);
         while (true) {
@@ -91,7 +96,7 @@ public class LoginTotalEducationAccount {
             String ch = input.next();
             switch (ch.charAt(0)) {
                 case '1' :
-                    NewSemester(lessons ,education);
+                    NewSemester(lessons ,education , professors);
                     break;
                 case '2' :
                     closeSemester(education , students , lessons);
@@ -105,61 +110,84 @@ public class LoginTotalEducationAccount {
         }
     }
 
-    private static void NewSemester ( ArrayList<Lesson> lessons , TotalEducation education ) {
+    private static void NewSemester ( ArrayList<Lesson> lessons , TotalEducation education , ArrayList<Professor> professors)  {
         Scanner input = new Scanner(System.in);
-        if (education.isNewTerm()) {
-            System.err.println("First you must close progress term.");
-            System.out.println("Press any key to exit.");
-            input.next();
-            return;
-        }
 
         education.setTermInProgress(true);
         education.setNewTerm(true);
 
+        //////////////// input information of lessons for new semester
         while (true) {
+            // input name of lesson
             Lesson lesson = new Lesson();
             System.out.print("Enter the name of new lesson : ");
             String n = input.next();
             lesson.setLessonName(n);
+            ///
 
-            System.out.println("Enter user name of a professor account for new lesson : ");
-            n = input.next();
-            lesson.setProfessor(n);
+            // input username of a professor for lesson
+            while (true) {
+                System.out.println("Enter user name of a professor account for new lesson : ");
+                n = input.next();
+                // check if there is a professor with input id
+                if (isDuplicateProfessorUser(professors , n)) {
+                    lesson.setProfessor(n);
+                    break;
+                } else {
+                    System.err.println("There is not professor with input user name!");
+                    System.out.println("Press e to exit or press any other key to continue.");
+                    String ch = input.next();
+                    if (ch.charAt(0) == 'e') {
+                        return;
+                    }
+                }
+            }
 
-            System.out.println("Enter the college providing the lesson : ");
-            n = input.next();
-            lesson.setCollegeL(n);
+            // input faculty for lesson
+            while (true) {
+                System.out.println("Enter the college providing the lesson : ");
+                n = input.next();
+                // check if there is a college with input name
+                condition c = isContain(education.getFaculties() , n);
+                if (c == condition.TRUE) {
+                    lesson.setCollegeL(n);
+                    break;
+                }else if (c == condition.EXIT) {
+                    if (lesson.getLessonCode() == null) {
+                        education.setTermInProgress(false);
+                        education.setNewTerm(false);
+                    }
+                    return;
+                }
+            }
 
+            // input code of lesson
             boolean checkDuplicate = true;
             while (checkDuplicate) {
+                checkDuplicate = false;
                 System.out.println("Enter lesson's code : ");
                 n = input.next();
                 /// check for duplicate input
                 for (Lesson l : lessons) {
                     if (l.getLessonCode().equals(n)) {
                         System.err.println("Duplicate lesson's code!");
-                    } else {
-                        lesson.setLessonCode(n);
-                        checkDuplicate = false;
-                        break;
+                        checkDuplicate = true;
                     }
                 }
             }
+            lesson.setLessonCode(n);
 
-            int a;
+            // input unit of lesson
             while (true) {
                 System.out.println("Enter the unit of this lesson : ");
-                try {
-                    a = input.nextInt();
+                int unit = isInputInt();
+                if ( unit != 0) {        // if input is wrong the return of isInputInt() function is zero
+                    lesson.setUnit(unit);
                     break;
-                } catch (Exception e) {
-                    System.err.println("Invalid input!");
-                    input.next();
                 }
             }
-            lesson.setUnit(a);
 
+            // print input information and cancel or add it
             System.out.println("\n\n\n\n\n" +
                     "\tLesson name : " + lesson.getLessonName() + "\n" +
                     "\tProfessor : " + lesson.getProfessor() + "\n" +
@@ -176,6 +204,10 @@ public class LoginTotalEducationAccount {
             System.out.println("To Exit press e and for add more lesson press any other key.");
             n = input.next();
             if (n.charAt(0) == 'e') {
+                if (lesson.getLessonCode() == null) {
+                    education.setTermInProgress(false);
+                    education.setNewTerm(false);
+                }
                 return;
             }
         }
@@ -231,17 +263,17 @@ public class LoginTotalEducationAccount {
 //                        }
 ////                        try {
 ////                            assert lesson != null;
-////                            lesson.deleteParticiple(std.getStudentNumber());
+////                            lesson.deleteParticiple(std.getStudentID());
 ////                        } catch (Exception ignored) {}
 //                    }
 //                }
 //                for ( int i = 0 ; i < indexOfDelete.size(); i++) {
-//                    lessons.get(indexOfDelete.get(i)).deleteParticiple(std.getStudentNumber());
+//                    lessons.get(indexOfDelete.get(i)).deleteParticiple(std.getStudentID());
 //                }
                 for (int i = 0; i < std.getLessons().size(); i++) {
                     for (int j = 0; j < lessons.size(); j++) {
                         if (std.getLessons().get(i) == lessons.get(j)) {
-                            lessons.get(i).deleteParticiple(std.getStudentNumber());
+                            lessons.get(i).deleteParticiple(std.getStudentID());
                         }
                     }
                 }
@@ -249,4 +281,5 @@ public class LoginTotalEducationAccount {
         }
         education.setNewTerm(false);
     }
+    ///////////
 }
