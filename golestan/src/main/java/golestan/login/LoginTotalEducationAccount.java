@@ -274,8 +274,9 @@ public class LoginTotalEducationAccount extends NeedFunctions {
 //                }
                 for (int i = 0; i < std.getLessons().size(); i++) {
                     for (int j = 0; j < lessons.size(); j++) {
-                        if (std.getLessons().get(i) == lessons.get(j)) {
+                        if (std.getLessons().get(i).getLessonCode().equals(lessons.get(j).getLessonCode())) {
                             lessons.get(i).deleteParticiple(std.getStudentID());
+                            std.deleteLesson(std.getLessons().get(i));
                         }
                     }
                 }

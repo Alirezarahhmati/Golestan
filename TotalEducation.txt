@@ -1,9 +1,0 @@
-e
-p
-true
-true
-{
-riazi
-fizik
-}
-
