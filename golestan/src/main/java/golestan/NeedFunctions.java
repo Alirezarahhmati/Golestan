@@ -1,6 +1,10 @@
 package golestan;
 
 import golestan.information.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -55,5 +59,143 @@ public class NeedFunctions {
             }
         }
         return false;
+    }
+
+
+    ////////    quit and save all information in file
+    protected static void quit (ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms) throws IOException {
+        File studentFile = new File("Student.txt");
+        makeEmptyFile(studentFile);
+        writeStudentInformationOnFile(students , studentFile);
+
+        File professorFile = new File("Professor.txt");
+        makeEmptyFile(professorFile);
+        writeProfessorInformationOnFile(professors , professorFile);
+
+        File educationFile = new File("TotalEducation.txt");
+        makeEmptyFile(educationFile);
+        writeEducationInformationOnFile(education , educationFile);
+
+        File lessonFile = new File("Lesson.txt");
+        makeEmptyFile(lessonFile);
+        writeLessonInformationOnFile(lessons , lessonFile);
+
+        File termFile = new File("Term.txt");
+        makeEmptyFile(termFile);
+        writeTermInformationOnFile(terms , termFile);
+
+        System.exit(0);
+    }
+
+    private static void writeStudentInformationOnFile(ArrayList<Student> students, File studentFile) throws IOException{
+        // now we write all information on empty file
+        FileWriter myWriter = new FileWriter(studentFile);
+        myWriter.write("{\n");
+        for (Student student : students) {
+            myWriter.write(student.getUsername() + "\n" + student.getPassword() + "\n" + student.getTotalName() + "\n"
+                    + student.getStudentID() + "\n" + student.getField() + "\n" + student.getCollege() + "\n" + student.getEntryYear() + "\n"
+                    + student.getGradePointAverage() + "\n");
+
+            myWriter.write("{\n");
+//            writeLessonInformationOnFile(student.getLessons() , studentFile);
+            ////////////////////////////////////// write lesson
+            myWriter.write("[\n");
+            for (Lesson lesson : student.getLessons()) {
+                myWriter.write(lesson.getLessonName() + "\n" + lesson.getProfessor() + "\n" + lesson.getCollegeL() + "\n"
+                        + lesson.getLessonCode() + "\n" + lesson.getUnit() + "\n" + lesson.getStudent_score() + "\n");
+
+                myWriter.write("{\n");
+                for (String s : lesson.getParticipant()) {
+                    myWriter.write(s + "\n");
+                }
+                myWriter.write("}\n");
+
+                myWriter.write("\n");
+            }
+            myWriter.write("]\n");
+            myWriter.write("}\n");
+            //////////////////////////////////////////
+
+            myWriter.write("\n");
+        }
+        myWriter.write("}\n");
+        myWriter.close();
+    }
+
+    private static void writeProfessorInformationOnFile(ArrayList<Professor> professors, File professorFile) throws IOException {
+        // now we write all information on empty file
+        FileWriter myWriter = new FileWriter(professorFile);
+        myWriter.write("{\n");
+        for (Professor professor : professors) {
+            myWriter.write(professor.getUsername() + "\n" + professor.getPassword() + "\n" + professor.getTotalName() + "\n"
+                    + professor.getGroup() + "\n" + professor.getCollegeP() + "\n");
+
+            myWriter.write("\n");
+        }
+        myWriter.write("}\n");
+        myWriter.close();
+    }
+
+    private static void writeEducationInformationOnFile(TotalEducation education, File educationFile) throws IOException {
+        // now we write all information on empty file
+        FileWriter myWriter = new FileWriter(educationFile);
+        myWriter.write(education.getUsername() + "\n" + education.getPassword() + "\n" + education.isNewTerm() + "\n" +
+                education.isTermInProgress() + "\n");
+
+        myWriter.write("{\n");
+        for (String faculty : education.getFaculties()) {
+            myWriter.write(faculty + "\n");
+        }
+        myWriter.write("}\n");
+        myWriter.write("\n");
+        myWriter.close();
+    }
+
+    private static void writeLessonInformationOnFile(ArrayList<Lesson> lessons, File lessonFile) throws IOException {
+        // now we write all information on empty file
+        FileWriter myWriter = new FileWriter(lessonFile);
+
+        myWriter.write("[\n");
+        for (Lesson lesson : lessons) {
+            myWriter.write(lesson.getLessonName() + "\n" + lesson.getProfessor() + "\n" + lesson.getCollegeL() + "\n"
+                    + lesson.getLessonCode() + "\n" + lesson.getUnit() + "\n" + lesson.getStudent_score() + "\n");
+
+            myWriter.write("{\n");
+            for (String s : lesson.getParticipant()) {
+                myWriter.write(s + "\n");
+            }
+            myWriter.write("}\n");
+
+            myWriter.write("\n");
+        }
+        myWriter.write("]\n");
+        myWriter.close();
+    }
+
+    private static void writeTermInformationOnFile(ArrayList<Term> terms, File termFile) throws IOException {
+        FileWriter myWriter = new FileWriter(termFile);
+        // write all information in Term
+        for (Term term : terms) {
+            myWriter.write("Term[\n");
+            writeProfessorInformationOnFile(term.getProfessors(), termFile);
+            writeStudentInformationOnFile(term.getStudents(), termFile);
+            writeLessonInformationOnFile(term.getLessons(), termFile);
+            myWriter.write("]Term\n");
+        }
+
+        myWriter.close();
+    }
+
+    protected static void makeEmptyFile (File file) {
+        // create an empty file
+        try {
+            if (!file.createNewFile()) {             /// check if there is a file so delete it and make another
+                file.delete();
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred!");
+            e.printStackTrace();
+        }
     }
 }

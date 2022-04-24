@@ -38,4 +38,8 @@ public class TotalEducation {
     public boolean isTermInProgress() {
         return termInProgress;
     }
+
+    public void setFaculties(ArrayList<String> faculties) {
+        Faculties = faculties;
+    }
 }

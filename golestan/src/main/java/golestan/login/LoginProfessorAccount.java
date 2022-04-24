@@ -2,11 +2,13 @@ package golestan.login;
 
 import golestan.*;
 import golestan.information.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LoginProfessorAccount extends NeedFunctions {
-    public void LoginMain(Professor pr, ArrayList<Professor> professors, ArrayList<Lesson> lessons, ArrayList<Student> students, TotalEducation education) {
+    public void LoginMain(Professor pr, ArrayList<Professor> professors, ArrayList<Lesson> lessons, ArrayList<Student> students, TotalEducation education , ArrayList<Term> terms) throws IOException {
         Scanner input = new Scanner(System.in);
         System.out.println("       " + pr.getTotalName());
 
@@ -28,7 +30,7 @@ public class LoginProfessorAccount extends NeedFunctions {
                 case '3' :
                     return;
                 case '4' :
-                    System.exit(0);
+                    quit(students , professors , education , lessons , terms);
             }
         }
     }

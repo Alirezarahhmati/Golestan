@@ -41,7 +41,7 @@ public class Lesson {
         participant.add(studentNumber);
     }
 
-    public void setStudent_score(int student_score) {
+    public void setStudent_score(double student_score) {
         this.student_score = student_score;
     }
 

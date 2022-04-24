@@ -13,16 +13,6 @@ public class Student {
     private double gradePointAverage;
     private ArrayList<Lesson> lessons = new ArrayList<>();
 
-//    public Student(String username, String password, String totalName, String studentID, String field, String college, String entryYear) {
-//        this.username = username;
-//        this.password = password;
-//        this.totalName = totalName;
-//        this.studentID = studentID;
-//        this.field = field;
-//        this.college = college;
-//        this.entryYear = entryYear;
-//    }
-
     /// set setter for all value
     public void setUsername(String username) { this.username = username; }
 

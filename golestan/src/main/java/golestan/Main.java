@@ -5,17 +5,22 @@ import golestan.login.LoginProfessorAccount;
 import golestan.login.LoginStudentAccount;
 import golestan.login.LoginTotalEducationAccount;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main extends NeedFunctions {
-    public static void main(String[] args)  {
+    public static void main(String[] args) throws IOException {
 
         ArrayList<Student> students = new ArrayList<>();
         ArrayList<Professor> professors = new ArrayList<>();
         TotalEducation education = new TotalEducation();
         ArrayList<Lesson> lessons = new ArrayList<>();
         ArrayList<Term> terms = new ArrayList<>();
+
+        readAllInformationOnFile(students , professors , education , lessons , terms);
 
         ///// page1 --> Login or SignUp or Exit
         while (true) {
@@ -24,7 +29,7 @@ public class Main extends NeedFunctions {
                 case '1' -> LoginFunction(students , professors , education , lessons ,terms);
                 case '2' -> SignUpFunction(students, professors, education);
                 case '3' -> {
-                    return;
+                    quit(students , professors , education , lessons , terms);
                 }
             }
         }
@@ -45,7 +50,8 @@ public class Main extends NeedFunctions {
         System.exit(0);
     }
 
-    static void LoginFunction(ArrayList<Student> students, ArrayList<Professor> professors, TotalEducation education, ArrayList<Lesson> lessons, ArrayList<Term> terms){
+    static void LoginFunction(ArrayList<Student> students, ArrayList<Professor> professors, TotalEducation education, ArrayList<Lesson> lessons, ArrayList<Term> terms) throws IOException
+    {
         Scanner input = new Scanner(System.in);
         while (true) {
             System.out.print("\n\n\n\n\n");
@@ -67,7 +73,7 @@ public class Main extends NeedFunctions {
                     Professor pr = Check_LoginTo_Professor_Account( professors );
                     if ( pr != null ) {
                         LoginProfessorAccount a = new LoginProfessorAccount();
-                        a.LoginMain(pr , professors , lessons , students , education);
+                        a.LoginMain(pr , professors , lessons , students , education , terms);
                     }
                     break;
                 case '3' :
@@ -347,5 +353,211 @@ public class Main extends NeedFunctions {
         input.next();
 
         return false;
+    }
+
+    static void readAllInformationOnFile (ArrayList<Student> students , ArrayList<Professor> professors , TotalEducation education , ArrayList<Lesson> lessons , ArrayList<Term> terms) throws FileNotFoundException {
+        File studentFile = new File("Student.txt");
+        if (studentFile.exists()) {
+            readStudentFile(students , studentFile);
+        }
+
+        File professorFile = new File("Professor.txt");
+        if (professorFile.exists()) {
+            readProfessorFile(professors , professorFile);
+        }
+
+        File educationFile = new File("TotalEducation.txt");
+        if (educationFile.exists()) {
+            readTotalEducationFile(education , educationFile);
+        }
+        
+        File lessonFile = new File("Lesson.txt");
+        if (lessonFile.exists()) {
+            readLessonFile(lessons , lessonFile);
+        }
+        
+        File termFile = new File("Term.txt");
+        if (termFile.exists()) {
+            readTermFile(terms , termFile);
+        }
+    }
+
+    private static void readTermFile(ArrayList<Term> terms , File file) throws FileNotFoundException {
+        Scanner myReader = new Scanner(file);
+
+        while (myReader.hasNextLine()) {
+            Term term = new Term();
+
+            myReader.nextLine();
+            readProfessorFile(term.getProfessors() , file);
+            readStudentFile(term.getStudents() , file);
+            readLessonFile(term.getLessons() , file);
+            myReader.nextLine();
+        }
+    }
+
+    private static void readLessonFile(ArrayList<Lesson> lessons, File lessonFile) throws FileNotFoundException {
+        Scanner myReader = new Scanner(lessonFile);
+
+        myReader.nextLine();
+        String help = myReader.nextLine();
+        while (!help.equals("]")) {
+            Lesson lesson = new Lesson();
+
+            if (!myReader.hasNextLine()) {
+                break;
+            }
+
+            lesson.setLessonName(help);
+            lesson.setProfessor(myReader.nextLine());
+            lesson.setCollegeL(myReader.nextLine());
+            lesson.setLessonCode(myReader.nextLine());
+            try {
+                lesson.setUnit(myReader.nextInt());
+            }catch (Exception ignored) {}
+            myReader.nextLine();
+            try {
+                lesson.setStudent_score(myReader.nextDouble());
+            } catch (Exception ignored) {}
+            myReader.nextLine();
+
+            myReader.nextLine();
+            while (true) {
+                String s = myReader.nextLine();
+                if (s.equals("}")) {
+                    break;
+                } else {
+                    lesson.addParticipant(s);
+                }
+            }
+
+            myReader.nextLine();
+            lessons.add(lesson);
+            help = myReader.nextLine();
+        }
+    }
+
+    private static void readTotalEducationFile(TotalEducation education, File educationFile) throws FileNotFoundException {
+        Scanner myReader = new Scanner(educationFile);
+        if (!myReader.hasNextLine()) {
+            return;
+        }
+
+        education.setUsername(myReader.nextLine());
+        education.setPassword(myReader.nextLine());
+        education.setNewTerm(myReader.nextBoolean());
+        myReader.nextLine();
+        education.setTermInProgress(myReader.nextBoolean());
+        myReader.nextLine();
+
+        myReader.nextLine();
+        while (myReader.hasNextLine()) {
+            String s = (myReader.nextLine());
+            if (s.equals("}")) {
+                break;
+            }else {
+                education.addFaculties(s);
+            }
+        }
+        myReader.nextLine();
+    }
+
+    private static void readProfessorFile(ArrayList<Professor> professors, File professorFile) throws FileNotFoundException {
+        Scanner myReader = new Scanner(professorFile);
+        myReader.nextLine();
+        String help = myReader.nextLine();
+        while (!help.equals("}")) {
+            Professor professor = new Professor();
+            if (!myReader.hasNextLine()) {
+                break;
+            }
+
+            professor.setUsername(help);
+            professor.setPassword(myReader.nextLine());
+            professor.setTotalName(myReader.nextLine());
+            professor.setGroup(myReader.nextLine());
+            professor.setCollegeP(myReader.nextLine());
+            myReader.nextLine();
+
+            professors.add(professor);
+            help = myReader.nextLine();
+        }
+    }
+
+    private static void readStudentFile(ArrayList<Student> students, File studentFile) throws FileNotFoundException {
+        Scanner myReader = new Scanner(studentFile);
+
+        myReader.nextLine();
+        String help = myReader.nextLine();
+        while (!help.equals("}")) {
+            Student student = new Student();
+            if (!myReader.hasNextLine()) {
+                break;
+            }
+
+            student.setUsername(help);
+            student.setPassword(myReader.nextLine());
+            student.setTotalName(myReader.nextLine());
+            student.setStudentID(myReader.nextLine());
+            student.setField(myReader.nextLine());
+            student.setCollege(myReader.nextLine());
+            try {
+                student.setEntryYear(myReader.nextInt());
+            }catch (Exception ignored) {}
+            myReader.nextLine();
+            try {
+                student.setGradePointAverage(myReader.nextDouble());
+            }catch (Exception ignored) {}
+            myReader.nextLine();
+            myReader.nextLine();
+//            readLessonFile(student.getLessons() , studentFile);
+            /////////////////////////////////////////
+            String help2 = myReader.nextLine();
+            if (help2.equals("[")) {
+                String help1 = myReader.nextLine();
+                while (!help1.equals("]")) {
+                    Lesson lesson = new Lesson();
+
+                    if (!myReader.hasNextLine()) {
+                        break;
+                    }
+
+                    lesson.setLessonName(help1);
+                    lesson.setProfessor(myReader.nextLine());
+                    lesson.setCollegeL(myReader.nextLine());
+                    lesson.setLessonCode(myReader.nextLine());
+                    try {
+                        lesson.setUnit(myReader.nextInt());
+                    } catch (Exception ignored) {
+                    }
+                    myReader.nextLine();
+                    try {
+                        lesson.setStudent_score(myReader.nextDouble());
+                    } catch (Exception ignored) {
+                    }
+                    myReader.nextLine();
+
+                    myReader.nextLine();
+                    while (true) {
+                        String s = myReader.nextLine();
+                        if (s.equals("}")) {
+                            break;
+                        } else {
+                            lesson.addParticipant(s);
+                        }
+                    }
+
+                    myReader.nextLine();
+                    student.addLessons(lesson);
+                    help1 = myReader.nextLine();
+                }
+                myReader.nextLine();
+            }
+            ////////////////////////////////////////
+            myReader.nextLine();
+
+            students.add(student);
+            help = myReader.nextLine();
+        }
     }
 }
