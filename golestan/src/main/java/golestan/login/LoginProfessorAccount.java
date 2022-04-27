@@ -228,7 +228,7 @@ public class LoginProfessorAccount extends NeedFunctions {
     private static ArrayList<Lesson> findArray (ArrayList<Lesson> lessons , String username , weekday day) {
         ArrayList<Lesson> help = new ArrayList<>();
         for (Lesson lesson : lessons) {
-            if (lesson.getProfessor().equals(username) && lesson.getWeekday().equals(day)) {
+            if (lesson.getProfessor().equals(username) && lesson.getWeekdays().contains(day)) {
                 help.add(lesson);
             }
         }

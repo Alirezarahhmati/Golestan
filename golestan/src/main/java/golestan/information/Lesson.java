@@ -10,7 +10,7 @@ public class Lesson extends NeedFunctions {
     private String lessonCode;
     private double startTime;
     private double endTime;
-    private weekday weekday;
+    private ArrayList<weekday> weekdays = new ArrayList<>();
     private int unit;
     private double student_score = -1;
     ArrayList<String> participant = new ArrayList<>();
@@ -57,8 +57,12 @@ public class Lesson extends NeedFunctions {
         this.endTime = endTime;
     }
 
-    public void setWeekday(NeedFunctions.weekday weekday) {
-        this.weekday = weekday;
+    public void setWeekdays(ArrayList<weekday> weekdays) {
+        this.weekdays = weekdays;
+    }
+
+    public void addWeekdays(NeedFunctions.weekday weekday) {
+        this.weekdays.add(weekday);
     }
 
     // getter
@@ -99,8 +103,8 @@ public class Lesson extends NeedFunctions {
         return endTime;
     }
 
-    public NeedFunctions.weekday getWeekday() {
-        return weekday;
+    public ArrayList<weekday> getWeekdays() {
+        return this.weekdays;
     }
 
     ///// remove

@@ -117,7 +117,7 @@ public class LoginStudentAccount extends  NeedFunctions {
                     "\tCollege : " + l.getCollegeL() + "\n" +
                     "\tUnit : " + l.getUnit() + "\n" +
                     "\tLesson's code : " + l.getLessonCode() + "\n"  +
-                    "\tWeekday : " + l.getWeekday() + "\n"     );
+                    "\tWeekday : " + l.getWeekdays() + "\n"     );
             System.out.printf("Start time : %.2f\n" , l.getStartTime());
             System.out.printf("End time : %.2f\n" , l.getEndTime() );
         }
@@ -151,7 +151,7 @@ public class LoginStudentAccount extends  NeedFunctions {
             int counter = 1;
             try {
                 for (Lesson l : std.getLessons()) {
-                    System.out.print(counter + "_ " + l.getLessonName() + "      Professor : " + l.getProfessor() + "       code : " + l.getLessonCode() + "   weekday : " + l.getWeekday() );
+                    System.out.print(counter + "_ " + l.getLessonName() + "      Professor : " + l.getProfessor() + "       code : " + l.getLessonCode() + "   weekday : " + l.getWeekdays() );
                     System.out.printf("    start : %.2f" , l.getStartTime());
                     System.out.printf("    end : %.2f\n" , l.getEndTime());
                     counter++;
@@ -184,7 +184,7 @@ public class LoginStudentAccount extends  NeedFunctions {
                                 /// check for time and weekday
                                 boolean checkTime = false;
                                 for (Lesson stdL : std.getLessons()) {
-                                    if (stdL.getWeekday().equals(l.getWeekday())) {
+                                    if (stdL.getWeekdays().equals(l.getWeekdays())) {
                                         if (stdL.getStartTime() <= l.getStartTime() && stdL.getEndTime() >= l.getStartTime()) {
                                             checkTime = true;
                                         }
@@ -307,7 +307,7 @@ public class LoginStudentAccount extends  NeedFunctions {
         newsLesson.setLessonCode(lesson.getLessonCode());
         newsLesson.setStartTime(lesson.getStartTime());
         newsLesson.setEndTime(lesson.getEndTime());
-        newsLesson.setWeekday(lesson.getWeekday());
+        newsLesson.setWeekdays(lesson.getWeekdays());
         newsLesson.setUnit(lesson.getUnit());
         newsLesson.setParticipant(lesson.getParticipant());
         return newsLesson;
@@ -316,7 +316,7 @@ public class LoginStudentAccount extends  NeedFunctions {
     private static ArrayList<Lesson> findArray (ArrayList<Lesson> lessons , weekday day) {
         ArrayList<Lesson> help = new ArrayList<>();
         for (Lesson lesson : lessons) {
-            if (lesson.getWeekday().equals(day)) {
+            if (lesson.getWeekdays().contains(day)) {
                 help.add(lesson);
             }
         }

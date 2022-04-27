@@ -3,7 +3,6 @@ package golestan.login;
 import golestan.*;
 import golestan.information.*;
 
-import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -243,30 +242,32 @@ public class LoginTotalEducationAccount extends NeedFunctions {
                                     "\t6_ Thursday\n"        );
 
                 String ch = input.next();
-                switch (ch.charAt(0)) {
-                    case '1' -> {
-                        lesson.setWeekday(weekday.SATURDAY);
-                        checkInput = true;
-                    }
-                    case '2' -> {
-                        lesson.setWeekday(weekday.SUNDAY);
-                        checkInput = true;
-                    }
-                    case '3' -> {
-                        lesson.setWeekday(weekday.MONDAY);
-                        checkInput = true;
-                    }
-                    case '4' -> {
-                        lesson.setWeekday(weekday.TUESDAY);
-                        checkInput = true;
-                    }
-                    case '5' -> {
-                        lesson.setWeekday(weekday.WEDNESDAY);
-                        checkInput = true;
-                    }
-                    case '6' -> {
-                        lesson.setWeekday(weekday.THURSDAY);
-                        checkInput = true;
+                for (char c : ch.toCharArray()) {
+                    switch (c) {
+                        case '1' -> {
+                            lesson.addWeekdays(weekday.SATURDAY);
+                            checkInput = true;
+                        }
+                        case '2' -> {
+                            lesson.addWeekdays(weekday.SUNDAY);
+                            checkInput = true;
+                        }
+                        case '3' -> {
+                            lesson.addWeekdays(weekday.MONDAY);
+                            checkInput = true;
+                        }
+                        case '4' -> {
+                            lesson.addWeekdays(weekday.TUESDAY);
+                            checkInput = true;
+                        }
+                        case '5' -> {
+                            lesson.addWeekdays(weekday.WEDNESDAY);
+                            checkInput = true;
+                        }
+                        case '6' -> {
+                            lesson.addWeekdays(weekday.THURSDAY);
+                            checkInput = true;
+                        }
                     }
                 }
             }
@@ -278,7 +279,7 @@ public class LoginTotalEducationAccount extends NeedFunctions {
                     "\tCollege : " + lesson.getCollegeL() + "\n" +
                     "\tLesson's code : " + lesson.getLessonCode() + "\n" +
                     "\tUnit : " + lesson.getUnit() + "\n" +
-                    "\tWeekday : " + lesson.getWeekday() + "\n"  );
+                    "\tWeekday : " + lesson.getWeekdays() + "\n"  );
             System.out.printf("Start time : %.2f\n" , lesson.getStartTime());
             System.out.printf("End time : %.2f\n" , lesson.getEndTime());
             System.out.println("\tTo cancel saving this lesson press e and press any other key to confirm." );
