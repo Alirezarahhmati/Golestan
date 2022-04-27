@@ -192,4 +192,46 @@ public class LoginProfessorAccount extends NeedFunctions {
             }
         }
     }
+
+    private static void schedule (Professor pr , ArrayList<Lesson> lessons) {
+        Scanner input = new Scanner(System.in);
+
+        printDaySchedule(weekday.SATURDAY , findArray(lessons , pr.getUsername() , weekday.SATURDAY) , pr.getTotalName());
+        printDaySchedule(weekday.SUNDAY , findArray(lessons , pr.getUsername() , weekday.SUNDAY) , pr.getTotalName());
+        printDaySchedule(weekday.MONDAY , findArray(lessons , pr.getUsername() , weekday.MONDAY) , pr.getTotalName());
+        printDaySchedule(weekday.TUESDAY , findArray(lessons , pr.getUsername() , weekday.TUESDAY) , pr.getTotalName());
+        printDaySchedule(weekday.WEDNESDAY , findArray(lessons , pr.getUsername() , weekday.WEDNESDAY) , pr.getTotalName());
+        printDaySchedule(weekday.THURSDAY , findArray(lessons , pr.getUsername() , weekday.THURSDAY) , pr.getTotalName());
+
+        System.out.println("press any key to exit.");
+        input.next();
+    }
+
+    private static void printDaySchedule (weekday day , ArrayList<Lesson> lessons , String professorName) {
+        System.out.println(" " + day + " ) ");
+        while (lessons.size() != 0) {
+            Lesson l = lessons.get(0);
+            for (Lesson lesson : lessons) {
+                if (lesson.getStartTime() < l.getStartTime()) {
+                    l = lesson;
+                }
+            }
+
+            // print the lesson
+            System.out.print(l.getLessonName() + "   Professor : " + professorName);
+            System.out.printf("[%.2f , %.2f" , l.getStartTime() , l.getEndTime());
+            lessons.remove(l);
+        }
+
+    }
+
+    private static ArrayList<Lesson> findArray (ArrayList<Lesson> lessons , String username , weekday day) {
+        ArrayList<Lesson> help = new ArrayList<>();
+        for (Lesson lesson : lessons) {
+            if (lesson.getProfessor().equals(username) && lesson.getWeekday().equals(day)) {
+                help.add(lesson);
+            }
+        }
+        return help;
+    }
 }

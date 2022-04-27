@@ -10,6 +10,15 @@ public class NeedFunctions {
         WRONG,
         EXIT
     }
+
+    public enum weekday {
+        SATURDAY,
+        SUNDAY,
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY
+    }
     protected static condition isContain(ArrayList<String> list, String find) {
         Scanner input = new Scanner(System.in);
         if (list.contains(find)) {

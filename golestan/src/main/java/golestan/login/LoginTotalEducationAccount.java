@@ -2,6 +2,8 @@ package golestan.login;
 
 import golestan.*;
 import golestan.information.*;
+
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -187,6 +189,88 @@ public class LoginTotalEducationAccount extends NeedFunctions {
                 }
             }
 
+            // input time of lesson
+            while (true) {
+                System.out.println("Enter the start time of this lesson(between 7 and 20) : ");
+                System.out.println("hour : ");
+                int startHour = isInputInt();
+                if (startHour < 7 || startHour > 20) {
+                    System.err.println("Wrong input!");
+                    continue;
+                }
+                System.out.println("minute : ");
+                int startMinute = isInputInt();
+                if (startMinute >= 60 || startMinute < 0) {
+                    System.err.println("Wrong input!");
+                    continue;
+                }
+                double startTime = startHour + ((double)startMinute / 100);
+
+                System.out.println("Enter the end time of this lesson : ");
+                System.out.println("hour : ");
+                int endHour = isInputInt();
+                if (endHour > 20 || endHour < 7) {
+                    System.err.println("Wrong input!");
+                    continue;
+                }
+                System.out.println("minute : ");
+                int endMinute = isInputInt();
+                if (endMinute < 0 || endMinute >= 60) {
+                    System.err.println("Wrong input!");
+                    continue;
+                }
+                double endTime = endHour + ((double)endMinute / 100);
+
+                if (endHour < startHour) {
+                    System.err.println("Your input end time is not match with start time!");
+                    continue;
+                }
+
+                lesson.setStartTime(startTime);
+                lesson.setEndTime(endTime);
+                break;
+            }
+
+            // input the weekday of lesson
+            boolean checkInput = false;
+            while (!checkInput) {
+                System.out.println("Enter one number for set weekday : ");
+                System.out.println(   "1_ Saturday\n" +
+                                    "\t2_ Sunday\n" +
+                                    "\t3_ Monday\n" +
+                                    "\t4_ Tuesday\n" +
+                                    "\t5_ Wednesday\n" +
+                                    "\t6_ Thursday\n"        );
+
+                String ch = input.next();
+                switch (ch.charAt(0)) {
+                    case '1' -> {
+                        lesson.setWeekday(weekday.SATURDAY);
+                        checkInput = true;
+                    }
+                    case '2' -> {
+                        lesson.setWeekday(weekday.SUNDAY);
+                        checkInput = true;
+                    }
+                    case '3' -> {
+                        lesson.setWeekday(weekday.MONDAY);
+                        checkInput = true;
+                    }
+                    case '4' -> {
+                        lesson.setWeekday(weekday.TUESDAY);
+                        checkInput = true;
+                    }
+                    case '5' -> {
+                        lesson.setWeekday(weekday.WEDNESDAY);
+                        checkInput = true;
+                    }
+                    case '6' -> {
+                        lesson.setWeekday(weekday.THURSDAY);
+                        checkInput = true;
+                    }
+                }
+            }
+
             // print input information and cancel or add it
             System.out.println("\n\n\n\n\n" +
                     "\tLesson name : " + lesson.getLessonName() + "\n" +
@@ -194,7 +278,10 @@ public class LoginTotalEducationAccount extends NeedFunctions {
                     "\tCollege : " + lesson.getCollegeL() + "\n" +
                     "\tLesson's code : " + lesson.getLessonCode() + "\n" +
                     "\tUnit : " + lesson.getUnit() + "\n" +
-                    "\tTo cancel saving this lesson press e and press any other key to confirm." );
+                    "\tWeekday : " + lesson.getWeekday() + "\n"  );
+            System.out.printf("Start time : %.2f\n" , lesson.getStartTime());
+            System.out.printf("End time : %.2f\n" , lesson.getEndTime());
+            System.out.println("\tTo cancel saving this lesson press e and press any other key to confirm." );
 
             n = input.next();
             if (n.charAt(0) != 'e') {

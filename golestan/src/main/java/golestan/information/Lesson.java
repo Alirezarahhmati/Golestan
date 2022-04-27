@@ -1,12 +1,16 @@
 package golestan.information;
 
+import golestan.NeedFunctions;
+
 import java.util.ArrayList;
-public class Lesson {
+public class Lesson extends NeedFunctions {
     private String lessonName;
     private String professor;
     private String collegeL;
     private String lessonCode;
-    private String time;
+    private double startTime;
+    private double endTime;
+    private weekday weekday;
     private int unit;
     private double student_score = -1;
     ArrayList<String> participant = new ArrayList<>();
@@ -33,10 +37,6 @@ public class Lesson {
         this.unit = unit;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
     public void addParticipant(String studentNumber) {
         participant.add(studentNumber);
     }
@@ -47,6 +47,18 @@ public class Lesson {
 
     public void setParticipant(ArrayList<String> participant) {
         this.participant = participant;
+    }
+
+    public void setStartTime(double startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(double endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setWeekday(NeedFunctions.weekday weekday) {
+        this.weekday = weekday;
     }
 
     // getter
@@ -70,16 +82,25 @@ public class Lesson {
         return unit;
     }
 
-    public String getTime() {
-        return time;
-    }
-
     public ArrayList<String> getParticipant() {
         return participant;
     }
 
     public double getStudent_score() {
         return student_score;
+    }
+
+
+    public double getStartTime() {
+        return startTime;
+    }
+
+    public double getEndTime() {
+        return endTime;
+    }
+
+    public NeedFunctions.weekday getWeekday() {
+        return weekday;
     }
 
     ///// remove
