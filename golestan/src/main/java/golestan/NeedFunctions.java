@@ -14,6 +14,15 @@ public class NeedFunctions {
         WRONG,
         EXIT
     }
+
+    public enum weekday {
+        SATURDAY,
+        SUNDAY,
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY
+    }
     protected static condition isContain(ArrayList<String> list, String find) {
         Scanner input = new Scanner(System.in);
         if (list.contains(find)) {
@@ -97,7 +106,6 @@ public class NeedFunctions {
                     + student.getGradePointAverage() + "\n");
 
             myWriter.write("{\n");
-//            writeLessonInformationOnFile(student.getLessons() , studentFile);
             ////////////////////////////////////// write lesson
             myWriter.write("[\n");
             for (Lesson lesson : student.getLessons()) {
@@ -107,6 +115,12 @@ public class NeedFunctions {
                 myWriter.write("{\n");
                 for (String s : lesson.getParticipant()) {
                     myWriter.write(s + "\n");
+                }
+                myWriter.write("}\n");
+
+                myWriter.write("{\n");
+                for (weekday weekday : lesson.getWeekdays()) {
+                    myWriter.write(weekday.toString());
                 }
                 myWriter.write("}\n");
 
@@ -158,11 +172,18 @@ public class NeedFunctions {
         myWriter.write("[\n");
         for (Lesson lesson : lessons) {
             myWriter.write(lesson.getLessonName() + "\n" + lesson.getProfessor() + "\n" + lesson.getCollegeL() + "\n"
-                    + lesson.getLessonCode() + "\n" + lesson.getUnit() + "\n" + lesson.getStudent_score() + "\n");
+                    + lesson.getLessonCode() + "\n" + lesson.getUnit() + "\n" + lesson.getStudent_score() + "\n" + lesson.getStartTime() + "\n"
+                    + lesson.getEndTime() + "\n");
 
             myWriter.write("{\n");
             for (String s : lesson.getParticipant()) {
                 myWriter.write(s + "\n");
+            }
+            myWriter.write("}\n");
+
+            myWriter.write("{\n");
+            for (weekday weekday : lesson.getWeekdays()) {
+                myWriter.write(weekday.toString());
             }
             myWriter.write("}\n");
 
@@ -198,4 +219,5 @@ public class NeedFunctions {
             e.printStackTrace();
         }
     }
+
 }

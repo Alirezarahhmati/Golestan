@@ -5,6 +5,7 @@ import golestan.login.LoginProfessorAccount;
 import golestan.login.LoginStudentAccount;
 import golestan.login.LoginTotalEducationAccount;
 
+import javax.print.DocFlavor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -420,6 +421,14 @@ public class Main extends NeedFunctions {
                 lesson.setStudent_score(myReader.nextDouble());
             } catch (Exception ignored) {}
             myReader.nextLine();
+            try {
+                lesson.setStartTime(myReader.nextDouble());
+            } catch (Exception ignored) {}
+            myReader.nextLine();
+            try {
+                lesson.setEndTime(myReader.nextDouble());
+            } catch (Exception ignored) {}
+            myReader.nextLine();
 
             myReader.nextLine();
             while (true) {
@@ -428,6 +437,16 @@ public class Main extends NeedFunctions {
                     break;
                 } else {
                     lesson.addParticipant(s);
+                }
+            }
+
+            myReader.nextLine();
+            while (true) {
+                String s = myReader.nextLine();
+                if (s.equals("}")) {
+                    break;
+                } else {
+                    lesson.addWeekdays(readWeekday(s));
                 }
             }
 
@@ -536,6 +555,14 @@ public class Main extends NeedFunctions {
                     } catch (Exception ignored) {
                     }
                     myReader.nextLine();
+                    try {
+                        lesson.setStartTime(myReader.nextDouble());
+                    } catch (Exception ignored) {}
+                    myReader.nextLine();
+                    try {
+                        lesson.setEndTime(myReader.nextDouble());
+                    } catch (Exception ignored) {}
+                    myReader.nextLine();
 
                     myReader.nextLine();
                     while (true) {
@@ -544,6 +571,16 @@ public class Main extends NeedFunctions {
                             break;
                         } else {
                             lesson.addParticipant(s);
+                        }
+                    }
+
+                    myReader.nextLine();
+                    while (true) {
+                        String s = myReader.nextLine();
+                        if (s.equals("}")) {
+                            break;
+                        } else {
+                            lesson.addWeekdays(readWeekday(s));
                         }
                     }
 
@@ -559,5 +596,17 @@ public class Main extends NeedFunctions {
             students.add(student);
             help = myReader.nextLine();
         }
+    }
+
+    private static weekday readWeekday(String day) {
+        return switch (day) {
+            case "SATURDAY" -> weekday.SATURDAY;
+            case "SUNDAY" -> weekday.SUNDAY;
+            case "MONDAY" -> weekday.MONDAY;
+            case "TUESDAY" -> weekday.TUESDAY;
+            case "WEDNESDAY" -> weekday.WEDNESDAY;
+            case "THURSDAY" -> weekday.THURSDAY;
+            default -> null;
+        };
     }
 }

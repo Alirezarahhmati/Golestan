@@ -70,17 +70,17 @@ public class LoginStudentAccount extends  NeedFunctions {
         input.next();
     }
 
-    private static void Schedule (ArrayList<Professor> professors , Student std) {
+    private static void Schedule (ArrayList<Professor> professors , Student std)
+    {
         Scanner input = new Scanner(System.in);
 
-        for (Lesson l : std.getLessons()) {
-            for (Professor pr : professors ) {
-                if (l.getProfessor().equals(pr.getUsername())) {
-                    System.out.println("\n");
-                    System.out.println("_ " + l.getLessonName() + "          professor : " + pr.getTotalName());
-                }
-            }
-        }
+        printDaySchedule(weekday.SATURDAY , findArray(std.getLessons() , weekday.SATURDAY) , professors);
+        printDaySchedule(weekday.SUNDAY , findArray(std.getLessons() , weekday.SUNDAY) , professors);
+        printDaySchedule(weekday.MONDAY , findArray(std.getLessons() , weekday.MONDAY) , professors);
+        printDaySchedule(weekday.TUESDAY , findArray(std.getLessons() , weekday.TUESDAY) , professors);
+        printDaySchedule(weekday.WEDNESDAY , findArray(std.getLessons() , weekday.WEDNESDAY) , professors);
+        printDaySchedule(weekday.THURSDAY , findArray(std.getLessons() , weekday.THURSDAY) , professors);
+
         System.out.println("\n\n\n           Press any key to exit.");
         input.next();
     }
@@ -113,13 +113,15 @@ public class LoginStudentAccount extends  NeedFunctions {
         Scanner input = new Scanner(System.in);
         for (Lesson l : lessons) {
             System.out.println("____________________________________________________________________");
-            System.out.print("\n" +
+            System.out.printf("\n" +
                     "\tLesson : " + l.getLessonName() + "\n" +
                     "\tProfessor : " + l.getProfessor() + "\n" +
-                    "\tTime : " + l.getTime() + "\n" +
                     "\tCollege : " + l.getCollegeL() + "\n" +
                     "\tUnit : " + l.getUnit() + "\n" +
-                    "\tLesson's code : " + l.getLessonCode() + "\n"  );
+                    "\tLesson's code : " + l.getLessonCode() + "\n"  +
+                    "\tWeekday : " + l.getWeekdays() + "\n"     );
+            System.out.printf("Start time : %.2f\n" , l.getStartTime());
+            System.out.printf("End time : %.2f\n" , l.getEndTime() );
         }
 
         System.out.println("\n\n");
@@ -151,7 +153,9 @@ public class LoginStudentAccount extends  NeedFunctions {
             int counter = 1;
             try {
                 for (Lesson l : std.getLessons()) {
-                    System.out.println(counter + "_ " + l.getLessonName() + "       Professor : " + l.getProfessor() + "            code : " + l.getLessonCode());
+                    System.out.print(counter + "_ " + l.getLessonName() + "      Professor : " + l.getProfessor() + "       code : " + l.getLessonCode() + "   weekday : " + l.getWeekdays() );
+                    System.out.printf("    start : %.2f" , l.getStartTime());
+                    System.out.printf("    end : %.2f\n" , l.getEndTime());
                     counter++;
                     sumUnit += l.getUnit();
                 }
@@ -179,7 +183,19 @@ public class LoginStudentAccount extends  NeedFunctions {
                                         break;
                                     }
                                 }
-                                if ( !checkDuplicate ) {
+                                /// check for time and weekday
+                                boolean checkTime = false;
+                                for (Lesson stdL : std.getLessons()) {
+                                    if (stdL.getWeekdays().equals(l.getWeekdays())) {
+                                        if (stdL.getStartTime() <= l.getStartTime() && stdL.getEndTime() >= l.getStartTime()) {
+                                            checkTime = true;
+                                        }
+                                        if (stdL.getStartTime() <= l.getEndTime() && stdL.getEndTime() >= l.getEndTime()) {
+                                            checkTime = true;
+                                        }
+                                    }
+                                }
+                                if ( !checkDuplicate && !checkTime) {
                                     l.addParticipant(std.getStudentID());
                                     std.addLessons(copyLesson(l));
                                 }
@@ -290,9 +306,46 @@ public class LoginStudentAccount extends  NeedFunctions {
         newsLesson.setProfessor(lesson.getProfessor());
         newsLesson.setCollegeL(lesson.getCollegeL());
         newsLesson.setLessonCode(lesson.getLessonCode());
-        newsLesson.setTime(lesson.getTime());
+        newsLesson.setStartTime(lesson.getStartTime());
+        newsLesson.setEndTime(lesson.getEndTime());
+        newsLesson.setWeekdays(lesson.getWeekdays());
         newsLesson.setUnit(lesson.getUnit());
         newsLesson.setParticipant(lesson.getParticipant());
         return newsLesson;
+    }
+
+    private static ArrayList<Lesson> findArray (ArrayList<Lesson> lessons , weekday day) {
+        ArrayList<Lesson> help = new ArrayList<>();
+        for (Lesson lesson : lessons) {
+            if (lesson.getWeekdays().contains(day)) {
+                help.add(lesson);
+            }
+        }
+        return help;
+    }
+
+    private static void printDaySchedule (weekday day , ArrayList<Lesson> lessons , ArrayList<Professor> professors ) {
+        System.out.println(" " + day + " ) ");
+        while (lessons.size() != 0) {
+            Lesson l = lessons.get(0);
+            for (Lesson lesson : lessons) {
+                if (lesson.getStartTime() < l.getStartTime()) {
+                    l = lesson;
+                }
+            }
+
+            // found professor name with username
+            String professorName = "";
+            for (Professor professor : professors) {
+                if (professor.getUsername().equals(l.getProfessor())) {
+                    professorName = professor.getTotalName();
+                }
+            }
+            // print the lesson
+            System.out.print(l.getLessonName() + "   Professor : " + professorName);
+            System.out.printf("[%.2f , %.2f" , l.getStartTime() , l.getEndTime());
+            lessons.remove(l);
+        }
+
     }
 }
