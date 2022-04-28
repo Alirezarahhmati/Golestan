@@ -1,7 +1,9 @@
-null
-null
-false
-false
+e
+p
+true
+true
 {
+riazi
+fizik
 }
 

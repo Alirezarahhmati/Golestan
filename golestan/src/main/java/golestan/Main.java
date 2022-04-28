@@ -5,7 +5,6 @@ import golestan.login.LoginProfessorAccount;
 import golestan.login.LoginStudentAccount;
 import golestan.login.LoginTotalEducationAccount;
 
-import javax.print.DocFlavor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -529,7 +528,7 @@ public class Main extends NeedFunctions {
             }catch (Exception ignored) {}
             myReader.nextLine();
             myReader.nextLine();
-//            readLessonFile(student.getLessons() , studentFile);
+
             /////////////////////////////////////////
             String help2 = myReader.nextLine();
             if (help2.equals("[")) {

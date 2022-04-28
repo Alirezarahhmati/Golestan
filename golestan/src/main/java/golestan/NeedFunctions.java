@@ -110,7 +110,8 @@ public class NeedFunctions {
             myWriter.write("[\n");
             for (Lesson lesson : student.getLessons()) {
                 myWriter.write(lesson.getLessonName() + "\n" + lesson.getProfessor() + "\n" + lesson.getCollegeL() + "\n"
-                        + lesson.getLessonCode() + "\n" + lesson.getUnit() + "\n" + lesson.getStudent_score() + "\n");
+                        + lesson.getLessonCode() + "\n" + lesson.getUnit() + "\n" + lesson.getStudent_score() + "\n" + lesson.getStartTime() + "\n"
+                        + lesson.getEndTime() + "\n");
 
                 myWriter.write("{\n");
                 for (String s : lesson.getParticipant()) {
@@ -120,7 +121,7 @@ public class NeedFunctions {
 
                 myWriter.write("{\n");
                 for (weekday weekday : lesson.getWeekdays()) {
-                    myWriter.write(weekday.toString());
+                    myWriter.write(weekday.toString() + "\n");
                 }
                 myWriter.write("}\n");
 
@@ -183,7 +184,7 @@ public class NeedFunctions {
 
             myWriter.write("{\n");
             for (weekday weekday : lesson.getWeekdays()) {
-                myWriter.write(weekday.toString());
+                myWriter.write(weekday.toString() + "\n");
             }
             myWriter.write("}\n");
 

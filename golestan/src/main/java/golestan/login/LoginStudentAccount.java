@@ -185,19 +185,25 @@ public class LoginStudentAccount extends  NeedFunctions {
                                 }
                                 /// check for time and weekday
                                 boolean checkTime = false;
-                                for (Lesson stdL : std.getLessons()) {
-                                    if (stdL.getWeekdays().equals(l.getWeekdays())) {
-                                        if (stdL.getStartTime() <= l.getStartTime() && stdL.getEndTime() >= l.getStartTime()) {
-                                            checkTime = true;
-                                        }
-                                        if (stdL.getStartTime() <= l.getEndTime() && stdL.getEndTime() >= l.getEndTime()) {
-                                            checkTime = true;
+                                for (weekday weekday : l.getWeekdays()) {
+                                    for (Lesson stdL : std.getLessons()) {
+                                        for (weekday day : stdL.getWeekdays()) {
+                                            if (stdL.getWeekdays().contains(weekday)) {
+                                                if (stdL.getStartTime() <= l.getStartTime() && stdL.getEndTime() >= l.getStartTime()) {
+                                                    checkTime = true;
+                                                }
+                                                if (stdL.getStartTime() <= l.getEndTime() && stdL.getEndTime() >= l.getEndTime()) {
+                                                    checkTime = true;
+                                                }
+                                            }
                                         }
                                     }
                                 }
                                 if ( !checkDuplicate && !checkTime) {
                                     l.addParticipant(std.getStudentID());
                                     std.addLessons(copyLesson(l));
+                                } else {
+                                    System.err.println("Temporal interference!");
                                 }
                             }
                             break;
@@ -343,7 +349,7 @@ public class LoginStudentAccount extends  NeedFunctions {
             }
             // print the lesson
             System.out.print(l.getLessonName() + "   Professor : " + professorName);
-            System.out.printf("[%.2f , %.2f" , l.getStartTime() , l.getEndTime());
+            System.out.printf("[%.2f , %.2f]\n" , l.getStartTime() , l.getEndTime());
             lessons.remove(l);
         }
 

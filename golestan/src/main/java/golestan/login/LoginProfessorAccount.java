@@ -15,9 +15,10 @@ public class LoginProfessorAccount extends NeedFunctions {
         while (true) {
             System.out.print("\n\n\n\n\n" +
                     "\t1_ Courses\n" +
-                    "\t2_ Edit Info\n" +
-                    "\t3_ Logout\n" +
-                    "\t4_ Quit\n"      );
+                    "\t2_ Schedule\n" +
+                    "\t3_ Edit Info\n" +
+                    "\t4_ Logout\n" +
+                    "\t5_ Quit\n"      );
             String ch = input.next();
 
             switch (ch.charAt(0)) {
@@ -25,11 +26,14 @@ public class LoginProfessorAccount extends NeedFunctions {
                     courses(lessons , students ,pr.getUsername());
                     break;
                 case '2' :
-                    editInfo(professors , pr , education);
+                    schedule(pr , lessons);
                     break;
                 case '3' :
-                    return;
+                    editInfo(professors , pr , education);
+                    break;
                 case '4' :
+                    return;
+                case '5' :
                     quit(students , professors , education , lessons , terms);
             }
         }
@@ -221,7 +225,7 @@ public class LoginProfessorAccount extends NeedFunctions {
 
             // print the lesson
             System.out.print(l.getLessonName() + "   Professor : " + professorName);
-            System.out.printf("[%.2f , %.2f" , l.getStartTime() , l.getEndTime());
+            System.out.printf("[%.2f , %.2f]\n" , l.getStartTime() , l.getEndTime());
             lessons.remove(l);
         }
 
