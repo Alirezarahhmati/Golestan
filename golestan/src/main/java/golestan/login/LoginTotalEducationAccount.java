@@ -342,27 +342,10 @@ public class LoginTotalEducationAccount extends NeedFunctions {
             }
 
             if (sumUnit < 12) {
-//                ArrayList<Integer> indexOfDelete = new ArrayList<>();
-//                for (Lesson stdL : std.getLessons()) {
-//                    for (Lesson l : lessons) {
-////                        Lesson lesson = null;
-//                        if (l == stdL) {
-////                            lesson = l;
-//                            indexOfDelete.add(lessons.indexOf(l));
-//                        }
-////                        try {
-////                            assert lesson != null;
-////                            lesson.deleteParticiple(std.getStudentID());
-////                        } catch (Exception ignored) {}
-//                    }
-//                }
-//                for ( int i = 0 ; i < indexOfDelete.size(); i++) {
-//                    lessons.get(indexOfDelete.get(i)).deleteParticiple(std.getStudentID());
-//                }
                 for (int i = 0; i < std.getLessons().size(); i++) {
                     for (int j = 0; j < lessons.size(); j++) {
                         if (std.getLessons().get(i).getLessonCode().equals(lessons.get(j).getLessonCode())) {
-                            lessons.get(i).deleteParticiple(std.getStudentID());
+                            lessons.get(j).deleteParticiple(std.getStudentID());
                             std.deleteLesson(std.getLessons().get(i));
                         }
                     }
