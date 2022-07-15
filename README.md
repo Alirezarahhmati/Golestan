@@ -43,4 +43,4 @@ The TotalEducation can close the time of taking courses and in the end of the se
 
 Also in every account you can edite your information.
 
-All the information save in some files when close the program (Just stop running with the option in program).
+All the information save in some files when close the program (Just stop running with the Exit options in program).
