@@ -26,7 +26,7 @@ For example :
     1_ Login
     2_ Sign Up
     3_ Exit
-I want to move into Login ,Just need to enter 1 and press Enter :
+I want to move into Login ,Just need to enter 1 and press Enter.
 
 First must sign up and create accounts for university and professors and students.
 For creating an account for student and professor need to make faculty in TotalEducation
